@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.RequestDto;
 import ru.practicum.RequestOutputDto;
 import ru.practicum.StatsClient;
@@ -42,6 +43,7 @@ import static ru.practicum.event.repository.EventSpecRepository.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class EventServiceImpl implements EventService {
     private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final EventRepository eventRepository;
@@ -81,6 +83,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto updateAdminEvent(Long eventId, EventUpdateDto eventUpdateDto) {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> {
             throw new ObjectNotFoundException("Event with id = " + eventId + " is not found.");
@@ -159,6 +162,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto addUserEvent(Long userId, NewEventDto eventDto) {
         Event event = eventMapper.newEventDtoToEvent(eventDto);
 
@@ -181,6 +185,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto updateUserEventById(Long userId, Long eventId, EventUpdateDto eventDto) {
         Event event = eventRepository.findByIdAndInitiatorId(eventId, userId).orElseThrow(() -> {
             throw new ObjectNotFoundException("Event with id = " + eventId + " and user id = " + userId + " is not found.");
