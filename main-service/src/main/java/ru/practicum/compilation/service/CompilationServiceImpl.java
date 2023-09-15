@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.compilation.dto.CompilationDto;
 import ru.practicum.compilation.dto.NewCompilationDto;
 import ru.practicum.compilation.dto.UpdateCompilationRequest;
@@ -22,14 +23,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-
+@Transactional(readOnly = true)
 public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
     private final CompilationMapper compilationMapper;
 
     @Override
-
+    @Transactional
     public CompilationDto add(NewCompilationDto compilationDto) {
         Compilation compilation = compilationMapper.newCompilationDtoToCompilation(compilationDto);
 
@@ -44,7 +45,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-
+    @Transactional
     public CompilationDto update(Long compId, UpdateCompilationRequest compRequest) {
         Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> {
             throw new ObjectNotFoundException("Compilation with id = " + compId + " doesn't exist.");
@@ -81,7 +82,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-
+    @Transactional
     public void delete(Long compId) {
         try {
             compilationRepository.deleteById(compId);
@@ -89,8 +90,7 @@ public class CompilationServiceImpl implements CompilationService {
             throw new ObjectNotFoundException("Compilation with id = " + compId + " doesn't exist.");
         }
     }
-
-
+    @Transactional
     public void updateComp(Compilation compilation, UpdateCompilationRequest compRequest) {
         if (compRequest.getEvents() != null) {
             List<Event> events = eventRepository.findAllByIdIn(compRequest.getEvents());
