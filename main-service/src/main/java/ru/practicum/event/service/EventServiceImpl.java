@@ -212,6 +212,7 @@ public class EventServiceImpl implements EventService {
 
         return eventMapper.eventToEventFullDto(event);
     }
+
     @Transactional
     public void updateViews(List<Event> events, HttpServletRequest request) {
         RequestDto requestDto = new RequestDto();
@@ -237,6 +238,7 @@ public class EventServiceImpl implements EventService {
             eventRepository.saveAll(events);
         }
     }
+
     @Transactional
     public void updateEvent(Event event, Long userId, NewEventDto eventDto) {
         User initiator = userRepository.findById(userId).orElseThrow(() -> {
@@ -262,6 +264,7 @@ public class EventServiceImpl implements EventService {
 
         event.setState(EventState.PENDING);
     }
+
     @Transactional
     public void updateEvent(Event event, EventUpdateDto eventUpdateDto) {
         if (eventUpdateDto.getAnnotation() != null) {
