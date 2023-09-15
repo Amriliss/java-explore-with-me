@@ -164,7 +164,6 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    @Transactional
     public EventFullDto addUserEvent(Long userId, NewEventDto eventDto) {
         Event event = eventMapper.newEventDtoToEvent(eventDto);
 
