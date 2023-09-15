@@ -90,6 +90,7 @@ public class CompilationServiceImpl implements CompilationService {
             throw new ObjectNotFoundException("Compilation with id = " + compId + " doesn't exist.");
         }
     }
+
     @Transactional
     public void updateComp(Compilation compilation, UpdateCompilationRequest compRequest) {
         if (compRequest.getEvents() != null) {
