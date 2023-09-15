@@ -66,6 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryDto get(Long catId) {
 
         Category category = categoryRepository.findById(catId).orElseThrow(() -> {
@@ -91,6 +92,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public List<CategoryDto> getAll(Integer from, Integer size) {
 
         Sort sort = Sort.by("id").ascending();
