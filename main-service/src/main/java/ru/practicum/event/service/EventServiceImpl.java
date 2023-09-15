@@ -212,8 +212,8 @@ public class EventServiceImpl implements EventService {
 
         return eventMapper.eventToEventFullDto(event);
     }
-
-    private void updateViews(List<Event> events, HttpServletRequest request) {
+    @Transactional
+    public void updateViews(List<Event> events, HttpServletRequest request) {
         RequestDto requestDto = new RequestDto();
         requestDto.setIp(request.getRemoteAddr());
         requestDto.setUri(request.getRequestURI());
@@ -237,8 +237,8 @@ public class EventServiceImpl implements EventService {
             eventRepository.saveAll(events);
         }
     }
-
-    private void updateEvent(Event event, Long userId, NewEventDto eventDto) {
+    @Transactional
+    public void updateEvent(Event event, Long userId, NewEventDto eventDto) {
         User initiator = userRepository.findById(userId).orElseThrow(() -> {
             throw new ObjectNotFoundException("User with id = " + userId + " doesn't exist.");
         });
@@ -262,8 +262,8 @@ public class EventServiceImpl implements EventService {
 
         event.setState(EventState.PENDING);
     }
-
-    private void updateEvent(Event event, EventUpdateDto eventUpdateDto) {
+    @Transactional
+    public void updateEvent(Event event, EventUpdateDto eventUpdateDto) {
         if (eventUpdateDto.getAnnotation() != null) {
             event.setAnnotation(eventUpdateDto.getAnnotation());
         }
