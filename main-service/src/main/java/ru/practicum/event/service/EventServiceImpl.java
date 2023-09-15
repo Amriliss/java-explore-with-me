@@ -8,7 +8,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.RequestDto;
 import ru.practicum.RequestOutputDto;
 import ru.practicum.StatsClient;
@@ -43,7 +42,6 @@ import static ru.practicum.event.repository.EventSpecRepository.*;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class EventServiceImpl implements EventService {
     private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final EventRepository eventRepository;
@@ -83,7 +81,6 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    @Transactional
     public EventFullDto updateAdminEvent(Long eventId, EventUpdateDto eventUpdateDto) {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> {
             throw new ObjectNotFoundException("Event with id = " + eventId + " is not found.");
@@ -113,8 +110,7 @@ public class EventServiceImpl implements EventService {
         return eventMapper.eventToEventFullDto(event);
     }
 
-        @Override
-    @Transactional
+    @Override
     public List<EventShortDto> getAll(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart,
                                       LocalDateTime rangeEnd, Boolean onlyAvailable, Integer from, Integer size,
                                       EventSort sort, HttpServletRequest request) {
@@ -142,7 +138,7 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+
     @Override
     public EventFullDto get(Long eventId, HttpServletRequest request) {
         Event event = eventRepository.findByIdAndStateIs(eventId, EventState.PUBLISHED).orElseThrow(() -> {
@@ -165,7 +161,6 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    @Transactional
     public EventFullDto addUserEvent(Long userId, NewEventDto eventDto) {
         Event event = eventMapper.newEventDtoToEvent(eventDto);
 
@@ -175,7 +170,7 @@ public class EventServiceImpl implements EventService {
         return eventMapper.eventToEventFullDto(event);
     }
 
-    @Transactional
+
     @Override
     public EventFullDto getUserEventById(Long userId, Long eventId) {
         Event event = eventRepository.findByIdAndInitiatorId(eventId, userId).orElseThrow(() -> {
@@ -189,7 +184,6 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    @Transactional
     public EventFullDto updateUserEventById(Long userId, Long eventId, EventUpdateDto eventDto) {
         Event event = eventRepository.findByIdAndInitiatorId(eventId, userId).orElseThrow(() -> {
             throw new ObjectNotFoundException("Event with id = " + eventId + " and user id = " + userId + " is not found.");
@@ -217,8 +211,8 @@ public class EventServiceImpl implements EventService {
         return eventMapper.eventToEventFullDto(event);
     }
 
-    @Transactional
-    public void updateViews(List<Event> events, HttpServletRequest request) {
+
+    private void updateViews(List<Event> events, HttpServletRequest request) {
         RequestDto requestDto = new RequestDto();
         requestDto.setIp(request.getRemoteAddr());
         requestDto.setUri(request.getRequestURI());
@@ -243,8 +237,8 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-    @Transactional
-    public void updateEvent(Event event, Long userId, NewEventDto eventDto) {
+
+    private void updateEvent(Event event, Long userId, NewEventDto eventDto) {
         User initiator = userRepository.findById(userId).orElseThrow(() -> {
             throw new ObjectNotFoundException("User with id = " + userId + " doesn't exist.");
         });
@@ -269,8 +263,8 @@ public class EventServiceImpl implements EventService {
         event.setState(EventState.PENDING);
     }
 
-    @Transactional
-    public void updateEvent(Event event, EventUpdateDto eventUpdateDto) {
+
+    private void updateEvent(Event event, EventUpdateDto eventUpdateDto) {
         if (eventUpdateDto.getAnnotation() != null) {
             event.setAnnotation(eventUpdateDto.getAnnotation());
         }
