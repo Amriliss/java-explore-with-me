@@ -34,8 +34,8 @@ public class AdminEventController {
                                              @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
                                              @RequestParam(name = "rangeEnd", required = false)
                                              @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
-                                             @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                             @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+                                             @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                             @RequestParam(name = "size", defaultValue = "10") Integer size) {
 
         log.info("Calling GET: /admin/events with 'users': {}, 'states': {}, 'categories': {}, 'rangeStart': {}, " +
                 "'rangeEnd': {}, 'from': {}, 'size': {}", users, states, categories, rangeStart, rangeEnd, from, size);
