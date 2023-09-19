@@ -33,8 +33,8 @@ public class AdminUserController {
 
     @GetMapping
     public List<UserDto> getAdminUsers(@RequestParam(name = "ids", required = false) List<Long> ids,
-                                       @PositiveOrZero  @RequestParam(name = "from", defaultValue = "0", required = false) Integer from,
-                                       @Positive @RequestParam(name = "size", defaultValue = "10", required = false) Integer size) {
+                                       @PositiveOrZero @RequestParam(name = "from", defaultValue = "0", required = false) Integer from,
+                                       @Positive@RequestParam(name = "size", defaultValue = "10", required = false) Integer size) {
 
         log.info("Calling GET: /admin/users with 'ids': {}, 'from': {}, 'size': {}", ids, from, size);
         return userService.getUsers(ids, from, size);
